@@ -1,0 +1,88 @@
+body {
+  padding: 0 20px;
+  font-family: "Lucida Sans", "Lucida Grande", Verdana, Arial, sans-serif;
+  font-size: 13px;
+}
+
+pre {
+  line-height: 120%;
+  white-space: -moz-pre-wrap;  /* Mozilla */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  white-space: pre-wrap;       /* CSS3 */
+  word-wrap: break-word;       /* IE 5.5+ */
+}
+
+.acls {
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+    padding: 0.3em;
+}
+
+.warnings {
+    background-color: #f0a0a0;
+}
+
+.acltag_header {
+    background-color: #CECEF6;
+}
+
+.acltag_type {
+    font-style: italic;
+    font-weight: bold;
+}
+.acltag_action {
+    color: #B40431;
+}
+
+.acltag_name {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.acltag_remark {
+    background-color: #E6E6E6;
+}
+
+.acltag_ip {
+    color: #088A08;
+    text-decoration: underline;
+}
+
+.acltag_mask {
+    color: #886A08;
+}
+
+.acltag_protocol {
+    color: #0B615E;
+}
+
+.acltag_port {
+    color: #0B615E;
+}
+
+.acltag_other_qualifier {
+    font-style: italic;
+}
+
+.acltag_error {
+    background-color: #F5A9A9;
+    font-weight: bold;
+}
+
+#body_top {
+}
+
+#body_base {
+    mergin: 5px;
+}
+
+#body_results {
+    mergin: 5px;
+}
+
+#acl_error {
+    background-color: #F5A9A9;
+    padding: 0.5em;
+}

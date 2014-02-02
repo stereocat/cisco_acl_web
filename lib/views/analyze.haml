@@ -1,0 +1,66 @@
+%html
+  %head
+    %link(rel='stylesheet' type='text/css' href='/css/main.css')
+    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    %title Cisco ACL Analyzer Web
+  %body
+    
+    #body_top
+      %h1 Cisco ACL Web
+      
+    #body_base
+      %h2 Input ACL
+      %form(action='/analyze' method='post' charser='utf-8')
+        %div
+          %textarea(name='acls' rows=20 cols=80 placeholder='Input ACL')
+            :preserve
+              #{@raw_acls}
+        %div
+          %input(type='submit' value='Analyze')
+            
+    #body_results
+      - unless @error_list.empty?
+        %h2 Errors in ACL
+        #acl_error
+          - @error_list.each do |each|
+            %ul
+              %li= each
+      - if defined?(@acl_table)
+        %h2 Parser Result
+        - @acl_table.each do |name, acl|
+          %h3= "ACL Name: #{name}"
+          .acls
+            %pre= acl.to_s
+      - else
+        %h2 ACL Sample
+        .acls
+          %pre
+            :preserve
+              access-list 1 permit 192.168.0.0 0.0.255.255
+              access-list 1 deny   any log
+              !
+              access-list 100 remark 6to4
+              access-list 100 permit 41 any host 192.88.99.1
+              access-list 100 permit ip any host 192.88.99.1
+              access-list 100 remark others
+              access-list 100 permit tcp any eq 0 any eq 0
+              access-list 100 permit udp any eq 0 any eq 0
+              access-list 100 deny   ip any any log
+              !
+              access-list 110 remark SPLIT_VPN
+              access-list 110 permit ip 192.168.0.0 0.0.255.255 any
+              !
+              ip access-list extended FA8-OUT
+               deny   udp any any eq bootpc
+               deny   udp any any eq bootps
+               permit tcp host 192.168.3.4 173.30.240.0 0.0.0.255 range 32768 65535
+               deny udp 192.168.3.0 0.0.240.255 lt 1024 any eq 80
+               remark network access-list remark!!
+               permit tcp any any established
+               deny tcp any any syn rst
+               deny udp any any log-input hoge
+               permit ip any any log
+              !
+            
+
+
