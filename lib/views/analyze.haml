@@ -19,7 +19,7 @@
           %input(type='submit' value='Analyze')
             
     #body_results
-      - unless @error_list.empty?
+      - unless @error_list.nil? || @error_list.empty?
         %h2 Errors in ACL
         #acl_error
           - @error_list.each do |each|
@@ -30,7 +30,13 @@
         - @acl_table.each do |name, acl|
           %h3= "ACL Name: #{name}"
           .acls
-            %pre= acl.to_s
+            %table
+              %tr
+              - acl.to_s.split(/$/).each_with_index do |line, count|
+                %tr
+                  %td.count= count + 1
+                  %td.acl
+                    %pre.acl= line
       - else
         %h2 ACL Sample
         .acls

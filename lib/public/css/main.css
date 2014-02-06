@@ -4,20 +4,43 @@ body {
   font-size: 13px;
 }
 
-pre {
-  line-height: 120%;
-  white-space: -moz-pre-wrap;  /* Mozilla */
-  white-space: -pre-wrap;      /* Opera 4-6 */
-  white-space: -o-pre-wrap;    /* Opera 7 */
-  white-space: pre-wrap;       /* CSS3 */
-  word-wrap: break-word;       /* IE 5.5+ */
+table {
+  font-family: "Lucida Sans", "Lucida Grande", Verdana, Arial, sans-serif;
+  font-size: 13px;
+  width: 85%;
+}
+
+table {
+    border: 1px #BDBDBD solid;
+    border-collapse: collapse;
+    border-spacing: 0px;
+    text-align: left;
+    vertical-align:bottom;
+}
+
+td.count {
+    width: 3em;
+    text-align:right;
+    color: #BDBDBD;
+    padding-right: 1em;
+    border-right: 1px #BDBDBD solid;
+}
+
+td.acl {
+    padding-left: 1em;
+    text-align:left;
+}
+
+pre.acl {
+    display:inline;
+    white-space: -moz-pre-wrap;  /* Mozilla */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    white-space: pre-wrap;       /* CSS3 */
+    word-wrap: break-word;       /* IE 5.5+ */
 }
 
 .acls {
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
-    padding: 0.3em;
 }
 
 .warnings {
@@ -84,5 +107,5 @@ pre {
 
 #acl_error {
     background-color: #F5A9A9;
-    padding: 0.5em;
+    padding: 0.2em;
 }
