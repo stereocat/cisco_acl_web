@@ -1,3 +1,5 @@
+!!! XML
+!!!
 %html
   %head
     %link(rel='stylesheet' type='text/css' href='/css/main.css')
@@ -11,7 +13,7 @@
         input_opts[:name] = name 
         input_opts[:size] = size
         input_opts[:placeholder] = placeholder
-        if !@search_opts.nil? && @search_opts.key?(value_key)
+        if defined?(@search_opts) && @search_opts.key?(value_key)
           input_opts[:value] = @search_opts[value_key]
         end
         input_opts
@@ -19,7 +21,7 @@
     :ruby
       def proto_select_opts(value)
         input_opts = { value: value }
-        if !@search_opts.nil? && @search_opts[:protocol] == value
+        if defined?(@search_opts) && @search_opts[:protocol] == value
           input_opts[:selected] = 'selected'
         end
         input_opts
@@ -70,7 +72,7 @@
           %input(type='submit' value='Analyze & search')
             
     #body_results
-      - unless @error_list.nil? || @error_list.empty?
+      - if defined?(@error_list) && !@error_list.empty?
         %h2 Errors in ACL
         #acl_error
           - @error_list.each do |each|
