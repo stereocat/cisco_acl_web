@@ -42,12 +42,11 @@ class CiscoAclWebApp < Sinatra::Base
   def _gen_search_opts(params)
     opts = {}
     opts[:protocol] = params[:protocol]
-    opts[:src_ip] = _default(params[:src_ip], '0.0.0.0')
-    opts[:dst_ip] = _default(params[:dst_ip], '0.0.0.0')
-
+    opts[:src_ip] = _default(params[:src_ip], 'any')
+    opts[:dst_ip] = _default(params[:dst_ip], 'any')
     if ['tcp','udp'].include?(params[:protocol])
-      opts[:src_port] = _default(params[:src_port], 0)
-      opts[:dst_port] = _default(params[:dst_port], 0)
+      opts[:src_port] = _default(params[:src_port], 'any')
+      opts[:dst_port] = _default(params[:dst_port], 'any')
     end
     opts
   end

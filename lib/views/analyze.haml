@@ -13,7 +13,7 @@
         input_opts[:name] = name 
         input_opts[:size] = size
         input_opts[:placeholder] = placeholder
-        if defined?(@search_opts) && @search_opts.key?(value_key)
+        if defined?(@search_opts) && @search_opts.key?(value_key) && @search_opts[value_key] != 'any'
           input_opts[:value] = @search_opts[value_key]
         end
         input_opts
@@ -97,7 +97,7 @@
                 - begin
                   - matched = ace.matches?(@search_opts)
                 - rescue => err
-                  - puts "ERROR: #{err}"
+                  - puts "ERROR: #{err}, in #{ace}"
                   - errlist.push err
                 %tr
                   - classstr = matched ? 'count_matched' : 'count'
