@@ -4,7 +4,27 @@
     %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
     %title Cisco ACL Analyzer Web
   %body
-    
+    :ruby
+      def text_input_opts(name, size, placeholder, value_key)
+        input_opts = {}
+        input_opts[:type] = 'text'
+        input_opts[:name] = name 
+        input_opts[:size] = size
+        input_opts[:placeholder] = placeholder
+        if !@search_opts.nil? && @search_opts.key?(value_key)
+          input_opts[:value] = @search_opts[value_key]
+        end
+        input_opts
+      end
+    :ruby
+      def proto_select_opts(value)
+        input_opts = { value: value }
+        if !@search_opts.nil? && @search_opts[:protocol] == value
+          input_opts[:selected] = 'selected'
+        end
+        input_opts
+      end
+      
     #body_top
       %h1 Cisco ACL Web
       
@@ -16,7 +36,38 @@
             :preserve
               #{@raw_acls}
         %div
-          %input(type='submit' value='Analyze')
+          %table#searchform
+            %tr
+              %td.desc
+                Protocol:
+              %td
+                %select(name='protocol')
+                  %option{proto_select_opts('ip')} ip
+                  %option{proto_select_opts('icmp')} icmp
+                  %option{proto_select_opts('tcp')} tcp
+                  %option{proto_select_opts('udp')} udp
+            %tr
+              %td.desc
+                Source IP:
+              %td
+                %input{text_input_opts('src_ip', 40, '192.168.0.0/24', :src_ip)}
+            %tr
+              %td.desc
+                Source Protocol or Port Number:
+              %td
+                %input{text_input_opts('src_port', 40, '80', :src_port)}
+            %tr
+              %td.desc
+                Destination IP:
+              %td
+                %input{text_input_opts('dst_ip', 40, '192.168.3.3', :dst_ip)}
+            %tr
+              %td.desc
+                Destination Protocol or Port Number:
+              %td
+                %input{text_input_opts('dst_port', 40, 'www', :dst_port)}
+        %div
+          %input(type='submit' value='Analyze & search')
             
     #body_results
       - unless @error_list.nil? || @error_list.empty?
@@ -30,16 +81,30 @@
         - @acl_table.each do |name, acl|
           %h3= "ACL Name: #{name}"
           .acls
-            %table
-              %tr
-              - acl.to_s.split(/$/).each_with_index do |line, count|
+            %table.acls
+              - if acl.named_acl?
                 %tr
-                  %td.count= count + 1
-                  %td.acl
-                    %pre.acl= line
+                  - count_init = 1
+                  %td.count= count_init
+                  %td.ace
+                    %pre= acl.header_string
+              - else
+                - count_init = 0
+              - acl.each_with_index do |ace, count|
+                - errlist = []
+                - begin
+                  - matched = ace.matches?(@search_opts)
+                - rescue => err
+                  - puts "ERROR: #{err}"
+                  - errlist.push err
+                %tr
+                  - classstr = matched ? 'count_matched' : 'count'
+                  %td(class='#{classstr}')= count + 1 + count_init
+                  %td.ace
+                    %pre= acl.line_string(ace).gsub(/^\s+/,'&nbsp;')
       - else
         %h2 ACL Sample
-        .acls
+        #acl_sample
           %pre
             :preserve
               access-list 1 permit 192.168.0.0 0.0.255.255

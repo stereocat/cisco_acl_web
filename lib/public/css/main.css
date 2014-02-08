@@ -10,9 +10,17 @@ table {
   width: 85%;
 }
 
-table {
+table#searchform {
+    border: 0px;
+}
+
+td.desc {
+    text-align:right;
+}
+
+table.acls {
     border: 1px #BDBDBD solid;
-    border-collapse: collapse;
+    /* border-collapse: collapse; */
     border-spacing: 0px;
     text-align: left;
     vertical-align:bottom;
@@ -26,12 +34,21 @@ td.count {
     border-right: 1px #BDBDBD solid;
 }
 
-td.acl {
+td.count_matched {
+    width: 3em;
+    text-align:right;
+    color: #BDBDBD;
+    padding-right: 1em;
+    border-right: 1px #BDBDBD solid;
+    background-color: #F2F5A9;
+}
+
+td.ace {
     padding-left: 1em;
     text-align:left;
 }
 
-pre.acl {
+td.ace pre {
     display:inline;
     white-space: -moz-pre-wrap;  /* Mozilla */
     white-space: -pre-wrap;      /* Opera 4-6 */
@@ -103,6 +120,11 @@ pre.acl {
 
 #body_results {
     mergin: 5px;
+}
+
+#acl_sample {
+    padding: 1em;
+    border: 1px #BDBDBD solid;
 }
 
 #acl_error {
