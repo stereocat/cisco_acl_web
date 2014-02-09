@@ -4,6 +4,23 @@ body {
   font-size: 13px;
 }
 
+#form_textarea {
+    text-align:center;
+}
+
+#acl_match_conditions {
+}
+
+#acl_exec_analyze {
+    text-align:center;
+}
+
+textarea {
+    width: 90%;
+    height: 20em;
+    line-height: 1.2em;
+}
+
 table {
   font-family: "Lucida Sans", "Lucida Grande", Verdana, Arial, sans-serif;
   font-size: 13px;

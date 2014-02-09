@@ -28,16 +28,27 @@
       end
       
     #body_top
-      %h1 Cisco ACL Web
+      %h1
+        %a(href="/")Cisco ACL Web
       
     #body_base
       %h2 Input ACL
       %form(action='/analyze' method='post' charser='utf-8')
-        %div
-          %textarea(name='acls' rows=20 cols=80 placeholder='Input ACL')
+        #acl_textarea
+          %textarea(name='acls' placeholder='Input ACL')
             :preserve
               #{@raw_acls}
-        %div
+        #acl_match_conditions
+          %p
+            %ul
+              %li
+                In below conditions, If a textbox keep empty, it
+                assumed 'any'.  (It can use token 'any' explicitly.)
+              %li
+                With Standard ACL, it is used to match source
+                conditions.  When it specifies only destination
+                conditions(specify 'source=ANY'), it matches all
+                ACEs.
           %table#searchform
             %tr
               %td.desc
@@ -52,23 +63,23 @@
               %td.desc
                 Source IP:
               %td
-                %input{text_input_opts('src_ip', 40, '192.168.0.0/24', :src_ip)}
+                %input{text_input_opts('src_ip', 40, 'e.g. 192.168.0.0/24', :src_ip)}
             %tr
               %td.desc
                 Source Protocol or Port Number:
               %td
-                %input{text_input_opts('src_port', 40, '80', :src_port)}
+                %input{text_input_opts('src_port', 40, 'e.g. 80', :src_port)}
             %tr
               %td.desc
                 Destination IP:
               %td
-                %input{text_input_opts('dst_ip', 40, '192.168.3.3', :dst_ip)}
+                %input{text_input_opts('dst_ip', 40, 'e.g. 192.168.3.3', :dst_ip)}
             %tr
               %td.desc
                 Destination Protocol or Port Number:
               %td
-                %input{text_input_opts('dst_port', 40, 'www', :dst_port)}
-        %div
+                %input{text_input_opts('dst_port', 40, 'e.g. any', :dst_port)}
+        #acl_exec_analyze
           %input(type='submit' value='Analyze & search')
             
     #body_results
