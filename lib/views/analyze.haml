@@ -3,7 +3,7 @@
 %html
   %head
     %link(rel='stylesheet' type='text/css' href='/css/main.css')
-    %meta(http-equiv="Content-Type" content="text/html; charset=UTF-8")
+    %meta(http-equiv='Content-Type' content='text/html; charset=UTF-8')
     %title Cisco ACL Analyzer Web
   %body
     :ruby
@@ -29,7 +29,7 @@
       
     #body_top
       %h1
-        %a(href="/")Cisco ACL Web
+        %a(href='/')Cisco ACL Web
       
     #body_base
       %h2 Input ACL
@@ -103,18 +103,22 @@
                     %pre= acl.header_string
               - else
                 - count_init = 0
+              - errlist = []
               - acl.each_with_index do |ace, count|
-                - errlist = []
                 - begin
                   - matched = ace.matches?(@search_opts)
                 - rescue => err
-                  - puts "ERROR: #{err}, in #{ace}"
-                  - errlist.push err
+                  - errlist.push [err, '[', ace.to_s, ']'].join(' ')
                 %tr
                   - classstr = matched ? 'count_matched' : 'count'
                   %td(class='#{classstr}')= count + 1 + count_init
                   %td.ace
                     %pre= acl.line_string(ace).gsub(/^\s+/,'&nbsp;')
+            - unless errlist.empty?
+              .search_condition_error
+                - errlist.each do |each|
+                  %ul
+                    %li= each
       - else
         %h2 ACL Sample
         #acl_sample

@@ -74,6 +74,19 @@ td.ace pre {
     word-wrap: break-word;       /* IE 5.5+ */
 }
 
+div.search_condition_error {
+    width: 85%;
+    padding: 0.3em;
+    margin: 0.4em;
+    background-color: #E6E6E6;
+    line-height: 1.2em;
+}
+
+div.search_condition_error ul {
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}
+
 .acls {
 }
 
