@@ -4,6 +4,13 @@ body {
   font-size: 13px;
 }
 
+/* form, text-area, input(text-box) */
+
+input:focus, textarea:focus {
+    /* highlight forcused input/text-box */
+    border-color: #FFBF00;
+}
+
 #form_textarea {
     text-align:center;
 }
@@ -19,7 +26,13 @@ textarea {
     width: 90%;
     height: 20em;
     line-height: 1.2em;
+    border: 1px solid #999;
 }
+input {
+    border: 1px solid #999;
+}
+
+/* table settings */
 
 table {
   font-family: "Lucida Sans", "Lucida Grande", Verdana, Arial, sans-serif;
@@ -86,6 +99,8 @@ div.search_condition_error ul {
     margin-top: 0.2em;
     margin-bottom: 0.2em;
 }
+
+/* ACL settings */
 
 .acls {
 }

@@ -7,14 +7,32 @@
     %title Cisco ACL Analyzer Web
   %body
     :ruby
-      def text_input_opts(name, size, placeholder, value_key)
+      def search_opts_includes?(value_key)
+        defined?(@search_opts) && @search_opts.key?(value_key)
+      end
+    :ruby
+      def text_input_opts(name, size, placeholder)
         input_opts = {}
         input_opts[:type] = 'text'
         input_opts[:name] = name 
         input_opts[:size] = size
         input_opts[:placeholder] = placeholder
-        if defined?(@search_opts) && @search_opts.key?(value_key) && @search_opts[value_key] != 'any'
+        value_key = name.intern
+        if search_opts_includes?(value_key) && @search_opts[value_key] != 'any'
           input_opts[:value] = @search_opts[value_key]
+        end
+        input_opts
+      end
+    :ruby
+      def radio_input_opts(name, value)
+        input_opts = {}
+        input_opts[:type] = 'radio'
+        input_opts[:name] = name
+        input_opts[:value] = value
+        value_key = name.intern
+        if search_opts_includes?(value_key) && @search_opts[value_key] == value ||
+             value == 'any' || value == 'ip'
+          input_opts[:checked] = 'checked'
         end
         input_opts
       end
@@ -43,6 +61,11 @@
               #{@raw_acls}
         #acl_match_conditions
           %p
+            The view point of this ACL search is like that: If there
+            is a flow which is specified by below search condition,
+            then what entries contains (matches) the flow? Highlighted
+            entries are the entry that permits (or denies) the flow
+            you specified.
             %ul
               %li
                 In below conditions, If a textbox keep empty, it
@@ -57,31 +80,54 @@
               %td.desc
                 Protocol:
               %td
-                %select(name='protocol')
-                  %option{proto_select_opts('ip')} ip
-                  %option{proto_select_opts('icmp')} icmp
-                  %option{proto_select_opts('tcp')} tcp
-                  %option{proto_select_opts('udp')} udp
+                %input{radio_input_opts('protocol', 'ip')} IP
+                %input{radio_input_opts('protocol', 'icmp')} ICMP
+                %input{radio_input_opts('protocol', 'tcp')} TCP
+                %input{radio_input_opts('protocol', 'udp')} UDP
+                %input{radio_input_opts('protocol', 'user')} Protocol No./Name
+                %input{text_input_opts('proto_id', 10, 'e.g. esp, 50')}
             %tr
               %td.desc
                 Source IP:
               %td
-                %input{text_input_opts('src_ip', 40, 'e.g. 192.168.0.0/24', :src_ip)}
+                %input{text_input_opts('src_ip', 20, 'e.g. 192.168.0.0/24')}
             %tr
               %td.desc
-                Source Protocol or Port Number:
+                Source Port Operator
               %td
-                %input{text_input_opts('src_port', 40, 'e.g. 80', :src_port)}
+                %input{radio_input_opts('src_operator', 'any')} Any
+                %input{radio_input_opts('src_operator', 'strict_any')} Strict Any
+                %input{radio_input_opts('src_operator', 'eq')} Equal
+                %input{radio_input_opts('src_operator', 'neq')} Not-Equal
+                %input{radio_input_opts('src_operator', 'lt')} Lower-than
+                %input{radio_input_opts('src_operator', 'gt')} Greater-than
+                %input{radio_input_opts('src_operator', 'range')} Range
+                %br
+                (Begin) Port :
+                %input{text_input_opts('src_begin_port', 10, 'e.g. 22')}
+                End Port :
+                %input{text_input_opts('src_end_port', 10, 'e.g. www')}
             %tr
               %td.desc
                 Destination IP:
               %td
-                %input{text_input_opts('dst_ip', 40, 'e.g. 192.168.3.3', :dst_ip)}
+                %input{text_input_opts('dst_ip', 20, 'e.g. 192.168.0.0/24')}
             %tr
               %td.desc
-                Destination Protocol or Port Number:
+                Destination  Port Operator
               %td
-                %input{text_input_opts('dst_port', 40, 'e.g. any', :dst_port)}
+                %input{radio_input_opts('dst_operator', 'any')} Any
+                %input{radio_input_opts('dst_operator', 'strict_any')} Strict Any
+                %input{radio_input_opts('dst_operator', 'eq')} Equal
+                %input{radio_input_opts('dst_operator', 'neq')} Not-Equal
+                %input{radio_input_opts('dst_operator', 'lt')} Lower-than
+                %input{radio_input_opts('dst_operator', 'gt')} Greater-than
+                %input{radio_input_opts('dst_operator', 'range')} Range
+                %br
+                (Begin) Port :
+                %input{text_input_opts('dst_begin_port', 10, 'e.g. 22')}
+                End Port :
+                %input{text_input_opts('dst_end_port', 10, 'e.g. www')}
         #acl_exec_analyze
           %input(type='submit' value='Analyze & search')
             
@@ -109,7 +155,7 @@
               - errlist = []
               - acl.each_with_index do |ace, count|
                 - begin
-                  - matched = ace.matches?(@search_opts)
+                  - matched = ace.contains?(@search_opts)
                 - rescue => err
                   - errlist.push [err, '[', ace.to_s, ']'].join(' ')
                 %tr

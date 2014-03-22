@@ -39,15 +39,30 @@ class CiscoAclWebApp < Sinatra::Base
   def _default(value, default)
     value == '' ? default : value
   end
+
   def _gen_search_opts(params)
     opts = {}
+    # protool
     opts[:protocol] = params[:protocol]
-    opts[:src_ip] = _default(params[:src_ip], 'any')
-    opts[:dst_ip] = _default(params[:dst_ip], 'any')
-    if ['tcp','udp'].include?(params[:protocol])
-      opts[:src_port] = _default(params[:src_port], 'any')
-      opts[:dst_port] = _default(params[:dst_port], 'any')
+    if params[:protocol] == 'user'
+      opts[:protocol] = _default(params[:proto_id], 'ip')
     end
+
+    # source ip
+    opts[:src_ip] = _default(params[:src_ip], 'any')
+    # source port operator
+    opts[:src_operator]   = params[:src_operator] # save current select
+    opts[:src_begin_port] = _default(params[:src_begin_port], nil)
+    opts[:src_end_port]   = _default(params[:src_end_port],   nil)
+
+    # destination ip
+    opts[:dst_ip] = _default(params[:dst_ip], 'any')
+    # destination port operator
+    opts[:dst_operator]   = params[:dst_operator] # save current select
+    opts[:dst_begin_port] = _default(params[:dst_begin_port], nil)
+    opts[:dst_end_port]   = _default(params[:dst_end_port],   nil)
+
+    # return
     opts
   end
 end
