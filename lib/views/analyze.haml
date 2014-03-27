@@ -61,11 +61,6 @@
               #{@raw_acls}
         #acl_match_conditions
           %p
-            The view point of this ACL search is like that: If there
-            is a flow which is specified by below search condition,
-            then what entries contains (matches) the flow? Highlighted
-            entries are the entry that permits (or denies) the flow
-            you specified.
             %ul
               %li
                 In below conditions, If a textbox keep empty, it
@@ -128,6 +123,26 @@
                 %input{text_input_opts('dst_begin_port', 10, 'e.g. 22')}
                 End Port :
                 %input{text_input_opts('dst_end_port', 10, 'e.g. www')}
+            %tr
+              %td.desc
+                Search type:
+              %td
+                %dl
+                  %dt
+                    %input{radio_input_opts('search_type', 'contains')}
+                    <strong>[Contains]</strong>
+                  %dd
+                    If there is a flow which is specified by above
+                    search condition in ACL, then what entries
+                    contains (matches) the flow? Highlighted entries
+                    are the entry that permits (or denies) the flow
+                    you specified.
+                  %dt
+                    %input{radio_input_opts('search_type', 'contained')}
+                    <strong>[Contained]</strong>
+                  %dd
+                    Reverse of [Contains]. Search some kind of ACEs
+                    included search conditions.
         #acl_exec_analyze
           %input(type='submit' value='Analyze & search')
             
@@ -155,7 +170,8 @@
               - errlist = []
               - acl.each_with_index do |ace, count|
                 - begin
-                  - matched = ace.contains?(@search_opts)
+                  - target_ace = CiscoAclIntp::AceSearchUtility.target_ace(@search_opts)
+                  - matched = @search_opts[:search_type] == 'contained' ? target_ace.contains?(ace) : ace.contains?(target_ace)
                 - rescue => err
                   - errlist.push [err, '[', ace.to_s, ']'].join(' ')
                 %tr

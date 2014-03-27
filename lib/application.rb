@@ -42,6 +42,7 @@ class CiscoAclWebApp < Sinatra::Base
 
   def _gen_search_opts(params)
     opts = {}
+
     # protool
     opts[:protocol] = params[:protocol]
     if params[:protocol] == 'user'
@@ -61,6 +62,9 @@ class CiscoAclWebApp < Sinatra::Base
     opts[:dst_operator]   = params[:dst_operator] # save current select
     opts[:dst_begin_port] = _default(params[:dst_begin_port], nil)
     opts[:dst_end_port]   = _default(params[:dst_end_port],   nil)
+
+    # search type
+    opts[:search_type]    = _default(params[:search_type], 'contains')
 
     # return
     opts
