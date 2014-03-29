@@ -65,13 +65,22 @@ td.count {
     border-right: 1px #BDBDBD solid;
 }
 
-td.count_matched {
+td.count_contained {
     width: 3em;
     text-align:right;
     color: #BDBDBD;
     padding-right: 1em;
     border-right: 1px #BDBDBD solid;
     background-color: #F2F5A9;
+}
+
+td.count_contains {
+    width: 3em;
+    text-align:right;
+    color: #BDBDBD;
+    padding-right: 1em;
+    border-right: 1px #BDBDBD solid;
+    background-color: #A9F5A9;
 }
 
 td.ace {

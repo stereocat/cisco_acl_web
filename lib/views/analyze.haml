@@ -79,7 +79,7 @@
                 %input{radio_input_opts('protocol', 'icmp')} ICMP
                 %input{radio_input_opts('protocol', 'tcp')} TCP
                 %input{radio_input_opts('protocol', 'udp')} UDP
-                %input{radio_input_opts('protocol', 'user')} Protocol No./Name
+                %input{radio_input_opts('protocol', 'user')} Protocol No. or Name
                 %input{text_input_opts('proto_id', 10, 'e.g. esp, 50')}
             %tr
               %td.desc
@@ -130,7 +130,8 @@
                 %dl
                   %dt
                     %input{radio_input_opts('search_type', 'contains')}
-                    <strong>[Contains]</strong>
+                    %strong(style="background-color: #A9F5A9;")
+                      Search ACEs [contains] the flow-conditions
                   %dd
                     If there is a flow which is specified by above
                     search condition in ACL, then what entries
@@ -139,9 +140,10 @@
                     you specified.
                   %dt
                     %input{radio_input_opts('search_type', 'contained')}
-                    <strong>[Contained]</strong>
+                    %strong(style="background-color: #F2F5A9;")
+                      Search ACEs [contained] by the flow-conditions
                   %dd
-                    Reverse of [Contains]. Search some kind of ACEs
+                    Reverse of [contains]. Search some kind of ACEs
                     included search conditions.
         #acl_exec_analyze
           %input(type='submit' value='Analyze & search')
@@ -175,7 +177,7 @@
                 - rescue => err
                   - errlist.push [err, '[', ace.to_s, ']'].join(' ')
                 %tr
-                  - classstr = matched ? 'count_matched' : 'count'
+                  - classstr = matched ? "count_#{@search_opts[:search_type]}" : 'count'
                   %td(class='#{classstr}')= count + 1 + count_init
                   %td.ace
                     %pre= acl.line_string(ace).gsub(/^\s+/,'&nbsp;')
