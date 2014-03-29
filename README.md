@@ -15,3 +15,7 @@ CiscoAclWeb is a [Sinatra](http://www.sinatrarb.com/) application, with command
     $ ruby lib/application.rb
 
 start WEBrick, access `localhost:4567` by default.
+
+## Sample
+
+Latest stable is working on Heroku, see http://cisco-acl-web.herokuapp.com/
