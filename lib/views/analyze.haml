@@ -14,7 +14,7 @@
       def text_input_opts(name, size, placeholder)
         input_opts = {}
         input_opts[:type] = 'text'
-        input_opts[:name] = name 
+        input_opts[:name] = name
         input_opts[:size] = size
         input_opts[:placeholder] = placeholder
         value_key = name.intern
@@ -24,14 +24,13 @@
         input_opts
       end
     :ruby
-      def radio_input_opts(name, value)
+      def radio_input_opts(name, value, checked=false)
         input_opts = {}
         input_opts[:type] = 'radio'
         input_opts[:name] = name
         input_opts[:value] = value
         value_key = name.intern
-        if search_opts_includes?(value_key) && @search_opts[value_key] == value ||
-             value == 'any' || value == 'ip'
+        if (search_opts_includes?(value_key) && @search_opts[value_key] == value) || checked
           input_opts[:checked] = 'checked'
         end
         input_opts
@@ -75,7 +74,7 @@
               %td.desc
                 Protocol:
               %td
-                %input{radio_input_opts('protocol', 'ip')} IP
+                %input{radio_input_opts('protocol', 'ip', true)} IP
                 %input{radio_input_opts('protocol', 'icmp')} ICMP
                 %input{radio_input_opts('protocol', 'tcp')} TCP
                 %input{radio_input_opts('protocol', 'udp')} UDP
@@ -90,7 +89,7 @@
               %td.desc
                 Source Port Operator
               %td
-                %input{radio_input_opts('src_operator', 'any')} Any
+                %input{radio_input_opts('src_operator', 'any', true)} Any
                 %input{radio_input_opts('src_operator', 'strict_any')} Strict Any
                 %input{radio_input_opts('src_operator', 'eq')} Equal
                 %input{radio_input_opts('src_operator', 'neq')} Not-Equal
@@ -111,7 +110,7 @@
               %td.desc
                 Destination  Port Operator
               %td
-                %input{radio_input_opts('dst_operator', 'any')} Any
+                %input{radio_input_opts('dst_operator', 'any', true)} Any
                 %input{radio_input_opts('dst_operator', 'strict_any')} Strict Any
                 %input{radio_input_opts('dst_operator', 'eq')} Equal
                 %input{radio_input_opts('dst_operator', 'neq')} Not-Equal
@@ -129,22 +128,19 @@
               %td
                 %dl
                   %dt
-                    %input{radio_input_opts('search_type', 'contains')}
+                    %input{radio_input_opts('search_type', 'contains', true)}
                     %strong(style="background-color: #A9F5A9;")
-                      Search ACEs [contains] the flow-conditions
+                      Search ACEs: [Search Condition].contains?([Input ACL])
                   %dd
-                    If there is a flow which is specified by above
-                    search condition in ACL, then what entries
-                    contains (matches) the flow? Highlighted entries
-                    are the entry that permits (or denies) the flow
-                    you specified.
+                    List-up ACEs from "Input ACL" that contained by search condition.
                   %dt
                     %input{radio_input_opts('search_type', 'contained')}
                     %strong(style="background-color: #F2F5A9;")
-                      Search ACEs [contained] by the flow-conditions
+                      Search ACEs: [Input ACL].contains?([Search Condition])
                   %dd
-                    Reverse of [contains]. Search some kind of ACEs
-                    included search conditions.
+                    List-up ACEs from "Input ACL" that contains search condition.
+                    You can use this search-type, to find ACEs that permit(deny)
+                    specified flows.
         #acl_exec_analyze
           %input(type='submit' value='Analyze & search')
             
@@ -173,7 +169,7 @@
               - acl.each_with_index do |ace, count|
                 - begin
                   - target_ace = CiscoAclIntp::AceSearchUtility.target_ace(@search_opts)
-                  - matched = @search_opts[:search_type] == 'contained' ? target_ace.contains?(ace) : ace.contains?(target_ace)
+                  - matched = @search_opts[:search_type] == 'contains' ? target_ace.contains?(ace) : ace.contains?(target_ace)
                 - rescue => err
                   - errlist.push [err, '[', ace.to_s, ']'].join(' ')
                 %tr
@@ -216,6 +212,3 @@
                deny udp any any log-input hoge
                permit ip any any log
               !
-            
-
-
